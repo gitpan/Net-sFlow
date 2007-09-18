@@ -15,7 +15,6 @@ WriteMakefile(
     'LIBS'            => ['-lm'], # e.g., '-lm'
     'ABSTRACT'        => 'decode sFlow datagrams',
     'AUTHOR'          => 'Elisa Jasinska <elisa.jasinska@ams-ix.net>',
-    'LICENSE'         => 'perl',
     'dist'            => { COMPRESS  =>  'gzip',
                            SUFFIX    =>  'gz'
                          },
