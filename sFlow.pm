@@ -6,7 +6,7 @@
 # With many thanks to Tobias Engel for his help and support!
 #
 #
-# sFlow.pm - 2008/11/24
+# sFlow.pm - 2008/12/08
 #
 # Please send comments or bug reports to <sflow@ams-ix.net>
 #
@@ -41,7 +41,7 @@ require Exporter;
 use Math::BigInt;
 
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 our @EXPORT_OK = qw(decode);
 
 
@@ -1980,7 +1980,11 @@ sub _decodeUserData {
      $sFlowSample->{UserSrcString}) =
       unpack("a$offset A$sFlowSample->{UserLengthSrcString}", $sFlowDatagramPacked);
 
-    $offset += $sFlowSample->{UserLengthSrcString};
+    # we have to cut off a $sFlowSample->{UserLengthSrcString} mod 4 == 0 number of bytes
+    my $tmp = 4 - ($sFlowSample->{UserLengthSrcString} % 4);
+    $tmp == 4 and $tmp = 0;
+
+    $offset += ($sFlowSample->{UserLengthSrcString} + $tmp);
 
   }
 
@@ -2019,7 +2023,11 @@ sub _decodeUserData {
      $sFlowSample->{UserDestString}) =
       unpack("a$offset A$sFlowSample->{UserLengthDestString}", $sFlowDatagramPacked);
 
-    $offset += $sFlowSample->{UserLengthDestString};
+    # we have to cut off a $sFlowSample->{UserLengthDestString} mod 4 == 0 number of bytes
+    my $tmp = 4 - ($sFlowSample->{UserLengthDestString} % 4);
+    $tmp == 4 and $tmp = 0;
+
+    $offset += ($sFlowSample->{UserLengthDestString} + $tmp);
 
   }
 
@@ -2071,7 +2079,11 @@ sub _decodeUrlData {
      $sFlowSample->{Url}) =
       unpack("a$offset A$sFlowSample->{UrlLength}", $sFlowDatagramPacked);
 
-    $offset += $sFlowSample->{UrlLength};
+    # we have to cut off a $sFlowSample->{UrlLength} mod 4 == 0 number of bytes
+    my $tmp = 4 - ($sFlowSample->{UrlLength} % 4);
+    $tmp == 4 and $tmp = 0;
+
+    $offset += ($sFlowSample->{UrlLength} + $tmp);
 
     if ($sFlowDatagram->{sFlowVersion} == SFLOWv5) {
 
@@ -2101,7 +2113,12 @@ sub _decodeUrlData {
          $sFlowSample->{UrlHost}) =
           unpack("a$offset A$sFlowSample->{UrlHostLength}", $sFlowDatagramPacked);
 
-        $offset += $sFlowSample->{UrlHostLength};
+        # we have to cut off a $sFlowSample->{UrlHostLength} mod 4 == 0 number of bytes
+        my $tmp = 4 - ($sFlowSample->{UrlHostLength} % 4);
+        $tmp == 4 and $tmp = 0;
+
+        $offset += ($sFlowSample->{UrlHostLength} + $tmp);
+
       }
 
     }
@@ -2322,23 +2339,23 @@ sub _decodeMplsTunnel {
   $sFlowSample->{MPLSTUNNEL} = 'MPLSTUNNEL';
 
   (undef,
-   $sFlowSample->{MplsTunnelLength}) =
+   $sFlowSample->{MplsTunnelNameLength}) =
     unpack("a$offset N", $sFlowDatagramPacked);
 
   $offset += 4;
 
-  if ($sFlowSample->{MplsTunnelLength} > length($sFlowDatagramPacked) - $offset) {
+  if ($sFlowSample->{MplsTunnelNameLength} > length($sFlowDatagramPacked) - $offset) {
 
     # error $sFlowSample->{MplsTunnelLength} too big
-    $error = "ERROR: [sFlow.pm] MplsTunnel: MplsTunnelLength too big "
+    $error = "ERROR: [sFlow.pm] MplsTunnel: MplsTunnelNameLength too big "
              . "- rest of the datagram skipped";
 
     return (undef, $error);
 
-  } elsif ($sFlowSample->{MplsTunnelLength} <= 0) {
+  } elsif ($sFlowSample->{MplsTunnelNameLength} <= 0) {
 
     # error $sFlowSample->{MplsTunnelLength} too small
-    $error = "ERROR: [sFlow.pm] MplsTunnel: MplsTunnelLength too small "
+    $error = "ERROR: [sFlow.pm] MplsTunnel: MplsTunnelNameLength too small "
              . "- rest of the datagram skipped";
 
     return (undef, $error);
@@ -2347,9 +2364,13 @@ sub _decodeMplsTunnel {
 
     (undef,
      $sFlowSample->{MplsTunnelName}) =
-      unpack("a$offset A$sFlowSample->{MplsTunnelLength}", $sFlowDatagramPacked);
+      unpack("a$offset A$sFlowSample->{MplsTunnelNameLength}", $sFlowDatagramPacked);
 
-    $offset += $sFlowSample->{MplsTunnelLength};
+    # we have to cut off a $sFlowSample->{MplsTunnelLength} mod 4 == 0 number of bytes
+    my $tmp = 4 - ($sFlowSample->{MplsTunnelNameLength} % 4);
+    $tmp == 4 and $tmp = 0;
+
+    $offset += ($sFlowSample->{MplsTunnelNameLength} + $tmp);
 
     (undef,
      $sFlowSample->{MplsTunnelId},
@@ -2408,7 +2429,11 @@ sub _decodeMplsVc {
      $sFlowSample->{MplsVcInstanceName}) =
       unpack("a$offset A$sFlowSample->{MplsVcInstanceNameLength}", $sFlowDatagramPacked);
 
-    $offset += $sFlowSample->{MplsVcInstanceNameLength};
+    # we have to cut off a $sFlowSample->{MplsVcInstanceNameLength} mod 4 == 0 number of bytes
+    my $tmp = 4 - ($sFlowSample->{MplsVcInstanceNameLength} % 4);
+    $tmp == 4 and $tmp = 0;
+
+    $offset += ($sFlowSample->{MplsVcInstanceNameLength} + $tmp);
 
     (undef,
      $sFlowSample->{MplsVcId},
@@ -2467,7 +2492,11 @@ sub _decodeMplsFec {
      $sFlowSample->{MplsFtnDescr}) =
       unpack("a$offset A$sFlowSample->{MplsFtnDescrLength}", $sFlowDatagramPacked);
 
-    $offset += $sFlowSample->{MplsFtrDescrLength};
+    # we have to cut off a $sFlowSample->{MplsFtrDescrLength} mod 4 == 0 number of bytes
+    my $tmp = 4 - ($sFlowSample->{MplsFtrDescrLength} % 4);
+    $tmp == 4 and $tmp = 0;
+
+    $offset += ($sFlowSample->{MplsFtrDescrLength} + $tmp);
 
     (undef, $sFlowSample->{MplsFtnMask}) = unpack("a$offset N", $sFlowDatagramPacked);
     $offset += 4;
@@ -3158,7 +3187,7 @@ Nat data:
 Mpls tunnel:
 
   MPLSTUNNEL
-  MplsTunnelLength
+  MplsTunnelNameLength
   MplsTunnelName
   MplsTunnelId
   MplsTunnelCosValue

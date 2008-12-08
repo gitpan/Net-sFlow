@@ -4,12 +4,12 @@
 # My first perl project ;)
 # Elisa Jasinska <elisa.jasinska@ams-ix.net>
 #
-# sFluxDebug.pl - 2007/09/18
+# sFluxDebug.pl - 2008/12/8
 #
 # Please send comments or bug reports to <sflow@ams-ix.net>
 #
 #
-# Copyright (c) 2007 AMS-IX B.V.
+# Copyright (c) 2008 AMS-IX B.V.
 #
 # This package is free software and is provided "as is" without express 
 # or implied warranty.  It may be used, redistributed and/or modified 
@@ -356,7 +356,7 @@ sub preparePrint {
     "NatDestAddress",
 
     "MPLSTUNNEL",
-    "MplsTunnelLength",
+    "MplsTunnelNameLength",
     "MplsTunnelName",
     "MplsTunnelId",
     "MplsTunnelCosValue",
