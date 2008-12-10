@@ -58,6 +58,9 @@ v. 0.08
 v. 0.09
   + bugfix - length values for strings must be multiple word size
 
+v. 0.10
+  + foundry enterprise type 1991 added, to decode foundry acl based samples
+
 
 Elisa Jasinska <elisa.jasinska@ams-ix.net>
-2008/12/08
+2008/12/10

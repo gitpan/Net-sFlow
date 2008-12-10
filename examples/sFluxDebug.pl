@@ -4,7 +4,7 @@
 # My first perl project ;)
 # Elisa Jasinska <elisa.jasinska@ams-ix.net>
 #
-# sFluxDebug.pl - 2008/12/8
+# sFluxDebug.pl - 2008/12/10
 #
 # Please send comments or bug reports to <sflow@ams-ix.net>
 #
@@ -227,6 +227,9 @@ sub preparePrint {
     "sampleTypeEnterprise",
     "sampleTypeFormat",
     "sampleLength",
+
+    "FoundryFlags",
+    "FoundryGroupID",
 
     "sampleSequenceNumber",
     "sourceIdType",

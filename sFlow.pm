@@ -6,7 +6,7 @@
 # With many thanks to Tobias Engel for his help and support!
 #
 #
-# sFlow.pm - 2008/12/08
+# sFlow.pm - 2008/12/10
 #
 # Please send comments or bug reports to <sflow@ams-ix.net>
 #
@@ -41,7 +41,7 @@ require Exporter;
 use Math::BigInt;
 
 
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 our @EXPORT_OK = qw(decode);
 
 
@@ -83,6 +83,7 @@ use constant FLOWSAMPLE_SFLOWv5             => 1;
 use constant COUNTERSAMPLE_SFLOWv5          => 2;
 use constant EXPANDEDFLOWSAMPLE_SFLOWv5     => 3;
 use constant EXPANDEDCOUNTERSAMPLE_SFLOWv5  => 4;
+use constant FOUNDRY_ACL_SFLOWv5            => 1991;
 
 use constant HEADERDATA_SFLOWv5             => 1;
 use constant ETHERNETFRAMEDATA_SFLOWv5      => 2;
@@ -893,6 +894,21 @@ sub decode {
             }
 
           }
+
+        }
+
+        elsif ($sFlowSample{sampleTypeEnterprise} == FOUNDRY_ACL_SFLOWv5
+               and $sFlowSample{sampleTypeFormat} == FLOWSAMPLE_SFLOWv5) {
+
+          (undef,
+           $sFlowSample{FoundryFlags},
+           $sFlowSample{FoundryGroupID}) =
+            unpack("a$offset N2", $sFlowDatagramPacked);
+
+          $offset += 8;
+
+          $sFlowDatagram{samplesInPacket}++;
+          next;
 
         }
 
@@ -3023,6 +3039,11 @@ In case of sFlow >= 5 you will first get enterprise, format and length informati
   sampleTypeEnterprise
   sampleTypeFormat
   sampleLength
+
+If the sample is a Foundry ACL based sample (enterprise == 1991 and format == 1) you will receive the following information:
+
+  FoundryFlags
+  FoundryGroupID
 
 In case of a I<flowsample> (enterprise == 0 and format == 1):
 
