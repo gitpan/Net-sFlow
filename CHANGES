@@ -45,14 +45,15 @@ v. 0.06
 v. 0.07
   + bugfix - ifInOctets, ifInDiscards
   + bugfix - $sFlowSample->{ifAdminStatus}, $sFlowSample->{ifOperStatus}
+    thanks wogri! :D
   + bugfix - examples/sFluxDebug.pl in printing DestMac address
 
 v. 0.08
   + localpref didn't exist pre v4
   + sFlowAsPath{lengthAsList} = 1; for sflow <= v4
   + some typos fixed
-  + boundry checks on values taken from datagram used as iterator
-  + boundry checks on values taken from datagram used as offset for unpack()
+  + boundary checks on values taken from datagram used as iterator
+  + boundary checks on values taken from datagram used as offset for unpack()
     thanks ilja! :D
 
 v. 0.09
@@ -61,6 +62,13 @@ v. 0.09
 v. 0.10
   + foundry enterprise type 1991 added, to decode foundry acl based samples
 
+v. 0.11
+  + sFluxDebug.pl can handle vlan tagged sflow packets now
+  + boundary checks eased a little... some things are allowed to be 0
+  + IPv6 address decoding fixed
+  + community list presentation changed
+    thanks ben! :D
+
 
 Elisa Jasinska <elisa.jasinska@ams-ix.net>
-2008/12/10
+2009/01/20
